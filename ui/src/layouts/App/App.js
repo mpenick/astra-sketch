@@ -1,7 +1,13 @@
 import React from "react";
+import { Routes, Route } from "react-router-dom";
+import JoinGame from "../JoinGame";
 
 const App = () => {
-  return <div>App</div>;
+  return (
+    <Routes>
+      <Route path="/" element={<JoinGame />} />
+    </Routes>
+  );
 };
 
 App.propTypes = {};
