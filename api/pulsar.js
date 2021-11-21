@@ -1,40 +1,44 @@
 var WebSocketClient = require('websocket').client;
+var grpc = require('./grpc');
 var config = require('./config');
 
 const authHeader = 'Bearer ' + config.ASTRA_STREAMING_TOKEN;
 
-const client = new WebSocketClient();
+const consumer = new WebSocketClient();
 
 const subscribers = {};
 
-client.on('connectFailed', function (error) {
+consumer.on('connectFailed', function (error) {
     console.log('Connect Error: ' + error.toString());
 });
 
-client.on('connect', function (connection) {
-    console.log('WebSocket Client Connected');
+consumer.on('connect', function (connection) {
+    console.log('Consumer Connected');
     connection.on('error', function (error) {
         console.log("Connection Error: " + error.toString());
     });
     connection.on('close', function () {
-        console.log('echo-protocol Connection Closed');
+        console.log('Consumer Connection Closed');
     });
     connection.on('message', function (message) {
         if (message.type === 'utf8') {
             const msg = JSON.parse(message.utf8Data)
             try {
                 const gameId = Buffer.from(msg.payload, 'base64');
-                const listeners = subscribers[gameId];
-                if (listeners) {
-                    listeners.forEach(res => {
-                        try {
-                            res.write(`data: ${gameId}\n\n`);
-                        } catch(e) {
-                            console.log(`Failed to write ${gameId} to a client`);
-                        }
-                    });
-                }
                 console.log("Received: '" + gameId + "'");
+                grpc.getGame(gameId).then(game => {
+                    const gameJson = JSON.stringify(game);
+                    const listeners = subscribers[gameId];
+                    if (listeners) {
+                        listeners.forEach(res => {
+                            try {
+                                res.write(`data: ${gameJson}\n\n`);
+                            } catch (e) {
+                                console.log(`Failed to write ${gameId} to a client`);
+                            }
+                        });
+                    }
+                });
             } catch(e) {
                 console.log("Failed to handle message %s", e);
             } finally {
@@ -44,7 +48,23 @@ client.on('connect', function (connection) {
     });
 });
 
-client.connect(config.ASTRA_STREAMING_TOPIC, null, null, { "Authorization": authHeader });
+consumer.connect(config.ASTRA_STREAMING_TOPIC, null, null, { "Authorization": authHeader });
+
+function publishGameChange(gameId) {
+    const publisher = new WebSocketClient();
+    publisher.connect(config.ASTRA_STREAMING_TOPIC_PUB, null, null, { "Authorization": authHeader });
+    publisher.on('connect', function (connection) {
+        console.log('Publisher Connected');
+        connection.on('error', function (error) {
+            console.log("Connection Error: " + error.toString());
+        });
+        connection.on('close', function () {
+            console.log('Publisher Connection Closed');
+        });
+        connection.sendUTF(JSON.stringify({payload: Buffer.from(gameId).toString('base64')}));
+        connection.close();
+    });
+}
 
 function subscribe(gameId, res) {
     if (subscribers[gameId]) {
@@ -65,3 +85,4 @@ function unsubscribe(gameId, res) {
 
 module.exports.subscribe = subscribe;
 module.exports.unsubscribe = unsubscribe;
+module.exports.publishGameChange = publishGameChange;

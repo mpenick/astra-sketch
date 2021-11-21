@@ -8,6 +8,7 @@ const astraToken = process.env.ASTRA_TOKEN || envVarNotFound("ASTRA_TOKEN");
 const keyspace = process.env.KEYSPACE || "sketch";
 
 const astraStreamingTopic = process.env.ASTRA_STREAMING_TOPIC || envVarNotFound("ASTRA_STREAMING_TOPIC");
+const astraStreamingTopicPub = process.env.ASTRA_STREAMING_TOPIC_PUB || envVarNotFound("ASTRA_STREAMING_TOPIC_PUB");
 const astraStreamingToken = process.env.ASTRA_STREAMING_TOKEN || envVarNotFound("ASTRA_STREAMING_TOKEN");
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
     ASTRA_TOKEN: astraToken,
     KEYSPACE: keyspace,
     ASTRA_STREAMING_TOPIC: astraStreamingTopic,
+    ASTRA_STREAMING_TOPIC_PUB: astraStreamingTopicPub,
     ASTRA_STREAMING_TOKEN: astraStreamingToken,
 };
