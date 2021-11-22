@@ -19,7 +19,6 @@ const SketchSurface = class extends React.Component {
   colorSelected = e => {
     const color = window.getComputedStyle(e.target, null).getPropertyValue('background-color');
     this.setState({strokeColor: color});
-    console.log("color selected");
   }
 
   getSvg = () => {
