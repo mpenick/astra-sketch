@@ -37,7 +37,3 @@
     width:50px;
     cursor:pointer;
 }
-
-.btn:focus {
-    filter: brightness(85%);
-}
