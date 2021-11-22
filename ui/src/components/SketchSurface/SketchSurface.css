@@ -1,0 +1,11 @@
+.btn {
+    border: 2px outset darkgray;
+    background-color: white;
+    height:50px;
+    width:50px;
+    cursor:pointer;
+}
+
+.btn:focus {
+    filter: brightness(85%);
+}
