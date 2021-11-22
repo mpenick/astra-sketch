@@ -1,6 +1,38 @@
-.btn {
-    border: 2px outset darkgray;
-    background-color: white;
+.btn-green {
+    border: 2px outset rgb(23, 26, 51);
+    background-color: rgb(104, 166, 116);
+    height:50px;
+    width:50px;
+    cursor:pointer;
+}
+
+.btn-blue {
+    border: 2px outset rgb(23, 26, 51);
+    background-color:rgb(86, 128, 208);
+    height:50px;
+    width:50px;
+    cursor:pointer;
+}
+
+.btn-lightblue {
+    border: 2px outset rgb(23, 26, 51);
+    background-color: rgb(106, 152, 178);
+    height:50px;
+    width:50px;
+    cursor:pointer;
+}
+
+.btn-yellow {
+    border: 2px outset rgb(23, 26, 51);
+    background-color: rgb(232, 162, 60);
+    height:50px;
+    width:50px;
+    cursor:pointer;
+}
+
+.btn-orange {
+    border: 2px outset rgb(23, 26, 51);
+    background-color: rgb(208, 117, 61);
     height:50px;
     width:50px;
     cursor:pointer;
