@@ -1,0 +1,19 @@
+<html>
+    <header>
+        <script>
+                fetch("/games/abc").then(res =>  res.json()).then(data => {
+                    const gameDiv = document.getElementById("game");
+                    gameDiv.innerHTML = JSON.stringify(data);
+                });
+                const eventSource = new EventSource("/stream/abc");
+                eventSource.onmessage = function (event) {
+                    const gameDiv = document.getElementById("game");
+                    gameDiv.innerHTML = event.data;
+                }
+        </script>
+    </header>
+    <body>
+        <h2>Data:</h2>
+        <div id="game"></div>
+    </body>
+</html>
